@@ -1,0 +1,134 @@
+---
+swagger: '2.0'
+basePath: /prod
+info:
+  title: <<stack>>
+  version: '1'
+schemes:
+- "https"
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+paths:
+  /v1/example:
+    get:
+      x-amazon-apigateway-request-validator: all
+      consumes:
+      - "application/json"
+      parameters:
+      - name: exampleparam
+        in: query
+        description: Example Parameter
+        required: true
+        type: string
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "200 response"
+        400:
+          description: "400 response"
+        500:
+          description: "500 response"
+        503:
+          description: "503 response"
+        504:
+          description: "504 response"
+      security:
+      - api_key: []
+      x-amazon-apigateway-integration:
+        requestTemplates:
+          application/json: |-
+            {
+                "example_param": $input.params('exampleparam')
+            }
+        responses:
+          default:
+            statusCode: "200"
+          .*timed out.*:
+            statusCode: "504"
+            responseTemplates:
+              application/json: "{\"message\" : \"Request timed out.\"}"
+          Client error.*:
+            statusCode: "400"
+            responseTemplates:
+              application/json: "{\"message\" : $input.json('$.errorMessage')}"
+          Service error.*:
+            statusCode: "500"
+            responseTemplates:
+              application/json: "{\"message\" : $input.json('$.errorMessage')}"
+          Process exited.*:
+            statusCode: "503"
+            responseTemplates:
+              application/json: "{\"message\" : $input.json('$.errorMessage')}"
+        uri: arn:aws:apigateway:<<region>>:lambda:path/2015-03-31/functions/arn:aws:lambda:<<region>>:<<accountId>>:function:${stageVariables.ExampleGetFunctionName}/invocations
+        passthroughBehavior: "when_no_templates"
+        httpMethod: "POST"
+        type: "aws"
+    post:
+      x-amazon-apigateway-request-validator: all
+      consumes:
+      - "application/json"
+      parameters:
+        - in: body
+          name: examplebody
+          description: Example Body
+          required: true
+          schema:
+            $ref: '#/definitions/ExampleBody'
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "200 response"
+        400:
+          description: "400 response"
+        500:
+          description: "500 response"
+        503:
+          description: "503 response"
+        504:
+          description: "504 response"
+      security:
+      - api_key: []
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+          .*timed out.*:
+            statusCode: "504"
+            responseTemplates:
+              application/json: "{\"message\" : \"Request timed out.\"}"
+          Client error.*:
+            statusCode: "400"
+            responseTemplates:
+              application/json: "{\"message\" : $input.json('$.errorMessage')}"
+          Service error.*:
+            statusCode: "500"
+            responseTemplates:
+              application/json: "{\"message\" : $input.json('$.errorMessage')}"
+          Process exited.*:
+            statusCode: "503"
+            responseTemplates:
+              application/json: "{\"message\" : $input.json('$.errorMessage')}"
+        uri: arn:aws:apigateway:<<region>>:lambda:path/2015-03-31/functions/arn:aws:lambda:<<region>>:<<accountId>>:function:${stageVariables.ExamplePostFunctionName}/invocations
+        passthroughBehavior: "when_no_templates"
+        httpMethod: "POST"
+        type: "aws"
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "x-api-key"
+    in: "header"
+definitions:
+  ExampleBody:
+    type: object
+    title: "Example Body"
+    required:
+      - example_required_key
+    properties:
+      example_required_key:
+        type: string
+      example_non_required_key:
+        type: string
