@@ -7,7 +7,7 @@ LOGGING_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
     'loggers': {
-        'venues': {
+        'projectbase': {
             'level': INFO,
         },
         'boto3': {
