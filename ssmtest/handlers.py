@@ -2,7 +2,7 @@ from logging import getLogger
 from logging.config import dictConfig
 from typing import Dict, Any
 
-from projectbase.settings import LOGGING_CONFIG
+from ssmtest.settings import LOGGING_CONFIG, CLIENT_ID
 
 _logger = getLogger(__name__)
 dictConfig(LOGGING_CONFIG)

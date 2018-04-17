@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: projectbase microservice.
+Description: ssmtest microservice.
 
 Parameters:
   ServiceName:
@@ -16,6 +16,14 @@ Parameters:
     Type: String
   EnvironmentType:
     Type: String
+  ClientId:
+    Type : 'AWS::SSM::Parameter::Value<String>'
+    Default: '/1ticket/marketplaces/seatgeek/client_id'
+    NoEcho: true
+  GsProdToken:
+    Type : 'AWS::SSM::Parameter::Value<String>'
+    Default: '/1ticket/marketplaces/seatgeek/gs_prod_token'
+    NoEcho: true
 
 Conditions:
   UseProdCondition:
@@ -25,7 +33,7 @@ Resources:
   ##########################################################################################
   # Shared Resources / Roles
   ##########################################################################################
-  projectbaseBaseRole:
+  SsmtestBaseRole:
     Type: "AWS::IAM::Role"
     Properties:
       Path: "/"
@@ -121,8 +129,8 @@ Resources:
   ExampleGetFunction:
     Type: AWS::Lambda::Function
     Properties:
-      Role: !GetAtt projectbaseBaseRole.Arn
-      Handler: projectbase.handlers.example_get
+      Role: !GetAtt SsmtestBaseRole.Arn
+      Handler: Ssmtest.handlers.example_get
       Runtime: python3.6
       Code:
         S3Bucket: !Ref CodeBucketName
@@ -137,11 +145,16 @@ Resources:
   ExamplePostFunction:
     Type: AWS::Lambda::Function
     Properties:
-      Role: !GetAtt projectbaseBaseRole.Arn
-      Handler: projectbase.handlers.example_post
+      Role: !GetAtt SsmtestBaseRole.Arn
+      Handler: Ssmtest.handlers.example_post
       Runtime: python3.6
       Code:
         S3Bucket: !Ref CodeBucketName
         S3Key: !Ref CodeKey
       MemorySize: 128
       Timeout: 300
+      Environment:
+        Variables:
+          CLIENT_ID: !Ref ClientId
+          GS_PROD_TOKEN: !Ref GsProdToken
+

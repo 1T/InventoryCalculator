@@ -1,5 +1,5 @@
-# projectbase
-A generalized template of a project to be used as a project starter. To use this project as the base, simply replace all instances of `projectbase` and `ProjectBase` with your app's name and you should get a base deployable stack.
+# ssmtest
+A generalized template of a project to be used as a project starter. To use this project as the base, simply replace all instances of `ssmtest` and `ProjectBase` with your app's name and you should get a base deployable stack.
 \
 \
 Endpoints:

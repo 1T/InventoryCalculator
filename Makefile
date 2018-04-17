@@ -1,5 +1,5 @@
 tests = tests
-package = projectbase
+package = ssmtest
 
 check:
 	# No unused imports, no undefined vars,
