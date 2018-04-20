@@ -1,7 +1,7 @@
 #!/bin/bash
 command -v aws >/dev/null 2>&1 || { echo "First, install the AWS CLI: python -m pip install --upgrade awscli." >&2; exit 1; }
 
-app=ssmtest
+app=projectbase
 user=$(aws iam get-user | python -m json.tool | fgrep UserName | cut -d'"' -f 4)
 email=${user}@1ticket.com
 

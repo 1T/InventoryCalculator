@@ -1,14 +1,13 @@
 from logging import INFO, ERROR
 from os import getenv
 
-
-CLIENT_ID = getenv('CLIENT_ID', '')
+PROD = getenv('EnvType', 'dev') == 'prod'
 
 LOGGING_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
     'loggers': {
-        'ssmtest': {
+        'projectbase': {
             'level': INFO,
         },
         'boto3': {

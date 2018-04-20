@@ -11,9 +11,9 @@ class ProjectBaseError(Exception):
 
 class ClientError(ProjectBaseError):
     def __init__(self, message, *args, **kwargs):
-        super().__init__('Client Error: ' + message, *args, **kwargs)
+        super().__init__('Client error: ' + message, *args, **kwargs)
 
 
 class ServiceError(ProjectBaseError):
     def __init__(self, message, *args, **kwargs):
-        super().__init__('Service Error: ' + message, *args, **kwargs)
+        super().__init__('Service error: ' + message, *args, **kwargs)
