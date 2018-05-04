@@ -42,7 +42,8 @@ LOGGING_CONFIG = {
     },
     'loggers': {
         '': {
-            'level': 'WARNING'
+            'level': 'WARNING',
+            'handlers': ['logstreamer']
         },
         APP_NAME: {
             'level': 'INFO',
