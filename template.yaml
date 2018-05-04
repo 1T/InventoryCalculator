@@ -188,7 +188,7 @@ Resources:
       Timeout: "1"
       Count: 0
 
-  GetFunctionLogtoLambda:
+  GetFunctionSubscriptionFilter:
     Type: AWS::Logs::SubscriptionFilter
     DependsOn: GetFunctionLogGroupWaitCondition
     Properties:
