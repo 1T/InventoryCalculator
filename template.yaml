@@ -174,7 +174,7 @@ Resources:
       LogGroupName: !Join ["", ["/aws/lambda/", !Ref ExampleGetFunction]]
       RetentionInDays: 14
 
-  GetFunctionLogtoLambda:
+  GetFunctionSubscriptionFilter:
     Type: AWS::Logs::SubscriptionFilter
     DependsOn: "GetFunctionLogGroup"
     Properties:
