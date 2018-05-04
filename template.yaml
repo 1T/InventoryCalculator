@@ -23,6 +23,7 @@ Parameters:
   EnvironmentType:
     Description: Environment type.
     Type: String
+    Default: dev
     AllowedValues: [prod, dev]
     ConstraintDescription: must specify prod or dev.
   LogStreamerArn:
