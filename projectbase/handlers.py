@@ -10,7 +10,10 @@ dictConfig(LOGGING_CONFIG)
 
 def example_get(event: Dict[str, Any], _: Any) -> None:
     """Handle example get request."""
-    _logger.info(f'Got event: {event}')
+    # log dictionaries directly: adding key to root level override other fie
+    _logger.info(event)
+    # Or, log message and extra dictionary
+    _logger.info("mymessage", extra={"userid": 1.23, "itemid": 0})
     return {
         'event': event
     }

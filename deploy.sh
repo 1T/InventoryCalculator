@@ -4,6 +4,9 @@ command -v aws >/dev/null 2>&1 || { echo "First, install the AWS CLI: python -m 
 app=projectbase
 user=$(aws iam get-user | python -m json.tool | fgrep UserName | cut -d'"' -f 4)
 email=${user}@1ticket.com
+log_streamer_arn="/1ticket/logging/logstream_arn"
+create_log_group=true
+
 
 template=template.yaml
 swagger=swagger.yaml
@@ -75,6 +78,8 @@ aws cloudformation deploy \
                           SupportEmail=support@1ticket.com \
                           SwaggerKey=${release_swagger} \
                           NotificationEmail=${email} \
+                          LogStreamerArn="${log_streamer_arn}" \
+                          CreateLogGroup=${create_log_group} \
     --stack-name $stack \
     --template-file $template \
     --tags app-name=$stack

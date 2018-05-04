@@ -16,10 +16,25 @@ Parameters:
     Type: String
   EnvironmentType:
     Type: String
+  CreateLogGroup:
+    Description: Whether I should create a resource.
+    Type: String
+    AllowedValues: [true, false]
+  EnvironmentType:
+    Description: Environment type.
+    Type: String
+    AllowedValues: [prod, dev]
+    ConstraintDescription: must specify prod or dev.
+  LogStreamerArn:
+    Description: Lambda Arn for Log Streamer function
+    Type : 'AWS::SSM::Parameter::Value<String>'
+    Default: '/1ticket/logging/logstream_arn'
 
 Conditions:
   UseProdCondition:
     !Equals [!Ref EnvironmentType, prod]
+  ShouldCreateLogGroup:
+    !Equals [true, !Ref CreateLogGroup]
 
 Resources:
   ##########################################################################################
@@ -145,3 +160,23 @@ Resources:
         S3Key: !Ref CodeKey
       MemorySize: 128
       Timeout: 300
+
+
+  ##########################################################################################
+  # Log Ship -- Handles logging to centralized logging account.
+  ##########################################################################################
+  GetFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Condition: ShouldCreateLogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Join ["", ["/aws/lambda/", !Ref ExampleGetFunction]]
+      RetentionInDays: 14
+
+  GetFunctionLogtoLambda:
+    Type: AWS::Logs::SubscriptionFilter
+    DependsOn: "GetFunctionLogGroup"
+    Properties:
+      DestinationArn: !Sub ${LogStreamerArn}
+      FilterPattern: ''
+      LogGroupName: !Join ["", ["/aws/lambda/", !Ref ExampleGetFunction]]
