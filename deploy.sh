@@ -4,7 +4,7 @@ command -v aws >/dev/null 2>&1 || { echo "First, install the AWS CLI: python -m 
 app=projectbase
 user=$(aws iam get-user | python -m json.tool | fgrep UserName | cut -d'"' -f 4)
 email=${user}@1ticket.com
-log_streamer_arn="/1ticket/logging/logstream_arn"
+log_streamer_arn="/dti1ticket/logging/logstream_arn"
 create_log_group=true
 
 

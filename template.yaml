@@ -28,7 +28,7 @@ Parameters:
   LogStreamerArn:
     Description: Lambda Arn for Log Streamer function
     Type : 'AWS::SSM::Parameter::Value<String>'
-    Default: '/1ticket/logging/logstream_arn'
+    Default: '/dti1ticket/logging/logstream_arn'
 
 Conditions:
   UseProdCondition:
