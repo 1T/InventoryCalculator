@@ -21,7 +21,7 @@ def example_get(event: Dict[str, Any], _: Any) -> None:
 
 def example_post(event: Dict[str, Any], _: Any) -> None:
     """Handle example get request."""
-    _logger.info(f'Got event: {event}')
+    _logger.info('handle post', extra=event)
     return {
         'event': event
     }
