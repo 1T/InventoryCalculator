@@ -1,6 +1,6 @@
 from os import getenv
 
-APP_NAME = 'projectbase'
+APP_NAME = getenv('APP_NAME', 'unnamed')
 
 PROD = getenv('EnvType', 'dev') == 'prod'
 
