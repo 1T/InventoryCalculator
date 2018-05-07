@@ -5,7 +5,6 @@ APP_NAME = getenv('APP_NAME', 'unnamed')
 PROD = getenv('EnvType', 'dev') == 'prod'
 
 
-
 LOGGING_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
