@@ -144,6 +144,9 @@ Resources:
         S3Key: !Ref CodeKey
       MemorySize: 128
       Timeout: 300
+      Environment:
+        Variables:
+          APP_NAME: 'projectbase'
 
 
   ##########################################################################################
@@ -160,6 +163,9 @@ Resources:
         S3Key: !Ref CodeKey
       MemorySize: 128
       Timeout: 300
+      Environment:
+        Variables:
+          APP_NAME: 'projectbase'
 
 
   ##########################################################################################

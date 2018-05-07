@@ -1,15 +1,9 @@
-from logging import Filter
 from os import getenv
 
 APP_NAME = 'projectbase'
 
 PROD = getenv('EnvType', 'dev') == 'prod'
 
-
-class AppNameFilter(Filter):
-    def filter(self, record):
-        record.app_name = APP_NAME
-        return True
 
 
 LOGGING_CONFIG = {
@@ -29,7 +23,7 @@ LOGGING_CONFIG = {
             '()': '__main__.LambdaLoggerFilter',
         },
         'appname': {
-            '()': 'loggingtest.settings.AppNameFilter',
+            '()': 'pythonjsonlogger.jsonlogger.AppNameFilter',
         }
     },
     'handlers': {
