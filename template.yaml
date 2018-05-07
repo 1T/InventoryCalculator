@@ -15,7 +15,10 @@ Parameters:
   NotificationEmail:
     Type: String
   EnvironmentType:
+    Description: Environment type.
     Type: String
+    AllowedValues: [prod, dev]
+    ConstraintDescription: must specify prod or dev.
   CreateLogGroup:
     Description: Whether I should create a new LogGroup.
     Type: String
@@ -24,11 +27,6 @@ Parameters:
     Description: Whether I should create a SubscriptionFilter.
     Type: String
     AllowedValues: [true, false]
-  EnvironmentType:
-    Description: Environment type.
-    Type: String
-    AllowedValues: [prod, dev]
-    ConstraintDescription: must specify prod or dev.
   LogStreamerArn:
     Description: Lambda Arn for Log Streamer function
     Type : 'AWS::SSM::Parameter::Value<String>'
