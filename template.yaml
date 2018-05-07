@@ -150,7 +150,7 @@ Resources:
       Timeout: 300
       Environment:
         Variables:
-          APP_NAME: 'projectbase'
+          APP_NAME: !Ref ServiceName
 
 
   ##########################################################################################
@@ -169,7 +169,7 @@ Resources:
       Timeout: 300
       Environment:
         Variables:
-          APP_NAME: 'projectbase'
+          APP_NAME: !Ref ServiceName
 
 
   ##########################################################################################
