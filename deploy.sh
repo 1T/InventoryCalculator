@@ -6,6 +6,7 @@ user=$(aws iam get-user | python -m json.tool | fgrep UserName | cut -d'"' -f 4)
 email=${user}@1ticket.com
 log_streamer_arn="/dti1ticket/logging/logstream_arn"
 create_log_group=true
+create_subscription_filter=false
 
 
 template=template.yaml
@@ -80,6 +81,7 @@ aws cloudformation deploy \
                           NotificationEmail=${email} \
                           LogStreamerArn="${log_streamer_arn}" \
                           CreateLogGroup=${create_log_group} \
+                          CreateSubscriptionFilter=${create_subscription_filter} \
     --stack-name $stack \
     --template-file $template \
     --tags app-name=$stack

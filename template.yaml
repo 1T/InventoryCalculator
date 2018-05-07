@@ -17,7 +17,11 @@ Parameters:
   EnvironmentType:
     Type: String
   CreateLogGroup:
-    Description: Whether I should create a resource.
+    Description: Whether I should create a new LogGroup.
+    Type: String
+    AllowedValues: [true, false]
+  CreateSubscriptionFilter:
+    Description: Whether I should create a SubscriptionFilter.
     Type: String
     AllowedValues: [true, false]
   EnvironmentType:
@@ -35,6 +39,8 @@ Conditions:
     !Equals [!Ref EnvironmentType, prod]
   ShouldCreateLogGroup:
     !Equals [true, !Ref CreateLogGroup]
+  ShouldCreateSubscriptionFilter:
+    !Equals [true, !Ref CreateSubscriptionFilter]
 
 Resources:
   ##########################################################################################
@@ -196,6 +202,13 @@ Resources:
 
   GetFunctionSubscriptionFilter:
     Type: AWS::Logs::SubscriptionFilter
+    # Subscription filter assumes the ${LogStreamerArn} exist;
+    # use a condition to avoid  a template issue:
+    #   Could not execute the lambda function. Make sure you have given
+    #   CloudWatch Logs  permission to execute your function.
+    Condition: ShouldCreateSubscriptionFilter
+    # DepndsOn fails to support !If function; use WaitCondition detour:
+    # Hack VII http://garbe.io/blog/2017/07/17/cloudformation-hacks/
     DependsOn: GetFunctionLogGroupWaitCondition
     Properties:
       DestinationArn: !Sub ${LogStreamerArn}
