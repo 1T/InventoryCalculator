@@ -2,12 +2,10 @@ from logging import getLogger, setLoggerClass
 from logging.config import dictConfig
 from typing import Dict, Any
 
-from pythonjsonlogger.jsonlogger import OverrideKeyLogger
 
 from projectbase.settings import LOGGING_CONFIG
 
 
-setLoggerClass(OverrideKeyLogger)
 _logger = getLogger(__name__)
 dictConfig(LOGGING_CONFIG)
 
