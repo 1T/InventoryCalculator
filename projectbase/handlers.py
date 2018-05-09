@@ -1,4 +1,4 @@
-from logging import getLogger, setLoggerClass
+from logging import getLogger
 from logging.config import dictConfig
 from typing import Dict, Any
 
