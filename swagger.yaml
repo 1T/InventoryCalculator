@@ -27,14 +27,29 @@ paths:
       responses:
         200:
           description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         503:
           description: "503 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         504:
           description: "504 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
       security:
       - api_key: []
       x-amazon-apigateway-integration:
@@ -92,14 +107,29 @@ paths:
       responses:
         200:
           description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         503:
           description: "503 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         504:
           description: "504 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
       security:
       - api_key: []
       x-amazon-apigateway-integration:
