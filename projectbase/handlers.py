@@ -25,10 +25,10 @@ def example_post(event: Dict[str, Any], _: Any) -> None:
     """Handle example get request."""
     _logger.info(f'handle post: {dumps(event)}')
     extra_dict = {
-        'log': True,
-        'most': True,
-        'five': True,
-        'keys': True
+        'logurl': True,
+        'jobid': True,
+        'listingid': True,
+        'userid': True
     }
     _logger.info(f'my_dict', extra=extra_dict)
     return {
