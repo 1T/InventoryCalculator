@@ -13,7 +13,7 @@ LOGGING_CONFIG = {
             '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',
             'fmt':
                 '[%(levelname)s]\t%(asctime)s.%(msecs)dZ'
-                '\t%(aws_request_id)s\t%(message)s\t%(appname)s\n',
+                '\t%(aws_request_id)s\t%(message)s\n',
             'datefmt': '%Y-%m-%dT%H:%M:%S',
         }
     },
