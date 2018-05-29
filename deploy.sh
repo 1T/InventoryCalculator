@@ -2,7 +2,7 @@
 command -v aws >/dev/null 2>&1 || { echo "First, install the AWS CLI: python -m pip install --upgrade awscli." >&2; exit 1; }
 
 app=projectbase
-user=$(aws iam get-user | python -m json.tool | fgrep UserName | cut -d'"' -f 4)
+user=$(aws iam get-user --output text --query 'User.UserName')
 email=${user}@1ticket.com
 log_streamer_arn="/dti1ticket/logging/logstream_arn"
 create_log_group=true
