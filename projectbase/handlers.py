@@ -1,13 +1,12 @@
 from logging import getLogger
-from logging.config import dictConfig
 from typing import Dict, Any
 from json import dumps
 
 from projectbase.settings import LOGGING_CONFIG
-
+from projectbase.log import init_logging
 
 _logger = getLogger(__name__)
-dictConfig(LOGGING_CONFIG)
+init_logging()
 
 
 def example_get(event: Dict[str, Any], _: Any) -> None:
