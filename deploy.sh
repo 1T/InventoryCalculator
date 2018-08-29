@@ -4,18 +4,11 @@ command -v aws >/dev/null 2>&1 || { echo "First, install the AWS CLI: python -m 
 
 app=projectbase
 user=$(aws iam get-user --output text --query 'User.UserName')
-email=${user}@1ticket.com
-log_streamer_arn="/dti1ticket/logging/logstream_arn"
-create_log_group=true
-create_subscription_filter=false
-
 
 template=template.yaml
 swagger=swagger.yaml
 use_previous_value=true
-user=$(echo $email| cut -d'@' -f 1)
 stage=${1:-dev-$user}
-
 
 latest_version=$(date -u "+%Y-%m-%dT%H%M%SZ")
 if [[ "$stage" == *dev* ]]; then
@@ -28,7 +21,7 @@ if [[ "$stage" == *dev* ]]; then
 else
     stack=${app}
     email=devops@1ticket.com
-    version=$(git describe --tags 2> /dev/null) || $latest_version
+    version=$latest_version
     env_type=prod
     code_bucket=dti1ticket-releases
     export AWS_PROFILE=dti1ticketprod
@@ -66,7 +59,7 @@ zip -rq9 ${release}.zip *
 aws s3 cp ${release}.zip s3://${code_bucket}/
 cd ..
 rm -rf $release
-echo $aws_profile
+
 echo "Deploying $version to ${stack}..."
 aws cloudformation deploy \
     --region $aws_region \
@@ -77,12 +70,7 @@ aws cloudformation deploy \
                           CodeBucketName=$code_bucket \
                           CodeKey=${release}.zip \
                           EnvironmentType=${env_type} \
-                          SupportEmail=support@1ticket.com \
                           SwaggerKey=${release_swagger} \
-                          NotificationEmail=${email} \
-                          LogStreamerArn="${log_streamer_arn}" \
-                          CreateLogGroup=${create_log_group} \
-                          CreateSubscriptionFilter=${create_subscription_filter} \
     --stack-name $stack \
     --template-file $template \
     --tags app-name=$stack
