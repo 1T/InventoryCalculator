@@ -1,9 +1,9 @@
 from typing import Dict, Any
 
-from kinesislogger import get_logger
+from OneTicketLogging import elasticsearch_logger
 
 
-_logger = get_logger()
+_logger = elasticsearch_logger(__name__)
 
 
 def example_get(event: Dict[str, Any], _: Any) -> Dict:

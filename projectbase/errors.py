@@ -1,6 +1,6 @@
-from logging import getLogger
+from OneTicketLogging import elasticsearch_logger
 
-_logger = getLogger(__name__)
+_logger = elasticsearch_logger(__name__)
 
 
 class ProjectBaseError(Exception):
