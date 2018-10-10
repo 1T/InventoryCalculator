@@ -12,16 +12,16 @@ use_previous_value=true
 stage=${1:-dev-$user}
 version=$(date -u "+%Y-%m-%dT%H%M%SZ")
 
-if [[ "$stage" == *dev* ]]; then
-    stack=${app}-${user}
-    env_type=dev
-    code_bucket=etix-releases-dev
-    aws_profile=1ticketdev
-else
+if [[ "$stage" == *prod* ]]; then
     stack=${app}
     env_type=prod
     code_bucket=dti1ticket-releases
     aws_profile=dti1ticketprod
+else
+    stack=${app}-${user}
+    env_type=dev
+    code_bucket=etix-releases-dev
+    aws_profile=1ticketdev
 fi
 release=${stack}-${version}
 release_swagger=swagger-${release}.yaml
