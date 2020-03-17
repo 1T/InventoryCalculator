@@ -1,6 +1,6 @@
 import csv
 from io import StringIO
-from inventorycalculator.errors import InvalidInventoryDataFormat
+from inventorycalculator.errors import InvalidInventoryDataFormatError
 from inventorycalculator.models.inventory_item import InventoryItem
 from typing import List
 
@@ -20,5 +20,5 @@ class InventoryParser:
                     )
                 )
         except ValueError:
-            raise InvalidInventoryDataFormat('Unable to parse the given data')
+            raise InvalidInventoryDataFormatError('Unable to parse the given data')
         return result_items

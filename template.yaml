@@ -15,12 +15,8 @@ Parameters:
   EnvironmentType:
     Description: Environment type.
     Type: String
-    AllowedValues: [prod, dev]
+    AllowedValues: [dev]
     ConstraintDescription: must specify prod or dev.
-
-Conditions:
-  UseProdCondition:
-    !Equals [!Ref EnvironmentType, prod]
 
 Resources:
   ##########################################################################################

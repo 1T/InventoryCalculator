@@ -1,6 +1,6 @@
 import pytest
 from inventorycalculator.core.parsers.inventory_parser import InventoryParser
-from inventorycalculator.errors import InvalidInventoryDataFormat
+from inventorycalculator.errors import InvalidInventoryDataFormatError
 from inventorycalculator.models.inventory_item import InventoryItem
 
 
@@ -11,11 +11,11 @@ def test_parse_inventory_tsv_data():
     assert any(isinstance(item, InventoryItem) for item in items)
 
 
-@pytest.mark.xfail(raises=InvalidInventoryDataFormat)
+@pytest.mark.xfail(raises=InvalidInventoryDataFormatError)
 def test_parse_inventory_blank_data():
     InventoryParser().from_tsv('')
 
 
-@pytest.mark.xfail(raises=InvalidInventoryDataFormat)
+@pytest.mark.xfail(raises=InvalidInventoryDataFormatError)
 def test_parse_inventory_invalid_data():
     InventoryParser().from_tsv('fake data\nrow2')

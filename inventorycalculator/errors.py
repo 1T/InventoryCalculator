@@ -13,5 +13,9 @@ class LoadFileError(InventoryCalculatorBaseError):
     pass
 
 
-class InvalidInventoryDataFormat(InventoryCalculatorBaseError):
+class InvalidInventoryDataFormatError(InventoryCalculatorBaseError):
+    pass
+
+
+class InvokeLambdaError(InventoryCalculatorBaseError):
     pass
