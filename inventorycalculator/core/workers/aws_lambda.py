@@ -1,6 +1,6 @@
+import boto3
 from json import dumps
 from typing import Dict
-from boto3 import client
 from botocore.exceptions import ClientError
 from inventorycalculator.errors import InvokeLambdaError
 
@@ -8,7 +8,7 @@ from inventorycalculator.errors import InvokeLambdaError
 class AwsLambda:
     def __init__(self, name: str, **kwargs):
         self._name = name
-        self._client = client('lambda')
+        self._client = boto3.client('lambda')
         self._invocation_type = kwargs.get('InvocationType', 'Event')
 
     def async_invoke(self, payload: Dict):

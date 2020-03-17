@@ -33,3 +33,4 @@ def test_create_inventory_calculator_job(mock_async_invoke, mock_table_put, mock
         })
     ])
     mock_async_invoke.assert_called_with({'job_id': ANY})
+    assert {'job_id': ANY} == res

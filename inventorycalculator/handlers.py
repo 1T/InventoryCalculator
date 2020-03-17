@@ -23,18 +23,18 @@ def create_inventory_calculator_job(event: Dict[str, Any], _: Any) -> Dict:
     job_id = str(uuid4())
     job = {'job_id': job_id}
     storage.upload(job_id, file_content)
+    async_worker.async_invoke(job)
     db_table.put({
         **job,
         'status': STATUSES.RUNNING,
         'total_value': None
     })
-    async_worker.async_invoke(job)
     return job
 
 
-def example_post(event: Dict[str, Any], _: Any) -> Dict:
-    """Handle example post request."""
-    # _logger.info(event)
-    return {
-        'event': event
-    }
+# def example_post(event: Dict[str, Any], _: Any) -> Dict:
+#     """Handle example post request."""
+#     # _logger.info(event)
+#     return {
+#         'event': event
+#     }
