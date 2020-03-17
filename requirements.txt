@@ -1,3 +1,4 @@
+--extra-index-url https://pypi.dti1ticketapps.com/
 boto3==1.12.22
 botocore==1.15.22
 docutils==0.15.2
@@ -6,3 +7,7 @@ python-dateutil==2.8.1
 s3transfer==0.3.3
 six==1.14.0
 urllib3==1.25.8
+certifi==2019.11.28
+chardet==3.0.4
+idna==2.9
+requests==2.23.0

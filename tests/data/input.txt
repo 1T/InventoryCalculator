@@ -1,0 +1,37 @@
+hideseats	doPredeliver	hasPDF	hasBarcodes	1T_Action	Edit	Event	Venue	EventDate	EventTime	Quantity	Section	Row	SeatFrom	SeatThru	Notes	Cost	TicketID	InHandDate	EDelivery_ind	Stock	Splittype	Splitvalue	SPEC	SHEVENTID	POS_Stock	NearTermDeliveryDescription	POSID	POSEVENTID
+Y	N	N	N		y	Ozzy Osbourne (Rescheduled from 6/13/2019)	KeyBank Pavilion	6/11/2020	7:30:00 PM	1	LAWN	GA69	99	99	xfer 	55000.00	79450821	2019-05-20	Y	mobile_transfer			N		MOBILE_TRANSFER		22	2899438
+Y	N	N	N		y	Monster Jam	NRG Stadium	10/19/2019	7:00:00 PM	1	603	E	100	100		105.00	77667244	2019-10-18	Y	eticket			N		ELECTRONIC		22	3116341
+Y	Y	Y	Y		y	Monster Jam	Freedom Hall-KY	9/22/2019	1:00:00 PM	1	307	E	103	103		637.29	77657246	2019-06-12	Y	eticket	ANY		N		ELECTRONIC		22	3092376
+Y	Y	Y	Y		y	Monster Jam	Freedom Hall-KY	9/22/2019	1:00:00 PM	1	307	E	102	102		630.50	77657245	2019-06-12	Y	eticket	ANY		N		ELECTRONIC		22	3092376
+Y	Y	Y	Y		y	Monster Jam	Freedom Hall-KY	9/22/2019	1:00:00 PM	1	327	Q	100	100		635.35	77657243	2019-06-12	Y	eticket	ANY		N		ELECTRONIC		22	3092376
+Y	N	N	N		y	Monster Jam	Infinite Energy Arena	9/15/2019	1:00:00 PM	1	312	F	100	100	FLS flash 	66.50	77556263	2019-06-11	Y	flash			N		FLASH		22	3090651
+Y	N	N	N		y	Monster Jam	Infinite Energy Arena	9/15/2019	1:00:00 PM	1	312	Q	100	100	mobile 	66.50	77556262	2019-06-11	Y	mobile_screencap			N		MOBILE_SCREENCAP		22	3090651
+Y	N	N	N		y	Monster Jam	Infinite Energy Arena	9/15/2019	1:00:00 PM	1	312	H	100	100		66.50	77556260	2019-06-11	N	hard			N		HARD		22	3090651
+Y	N	N	N		y	Monster Jam	Freedom Hall-KY	9/22/2019	1:00:00 PM	2	307	M	102	103	mobile 	635.35	77550716	2019-09-21	Y	mobile_screencap	ANY		N		MOBILE_SCREENCAP		22	3092376
+Y	N	N	N		y	Monster Jam	Freedom Hall-KY	9/22/2019	1:00:00 PM	2	307	M	100	101	mobile 	635.35	77550715	2019-09-21	Y	mobile_screencap	ANY		N		MOBILE_SCREENCAP		22	3092376
+Y	N	N	N		y	Monster Jam	Freedom Hall-KY	9/22/2019	1:00:00 PM	2	307	H	100	101		635.35	77550576	2019-09-21	N	hard	ANY		N		HARD		22	3092376
+Y	N	N	N		y	Monster Jam	Freedom Hall-KY	9/22/2019	1:00:00 PM	2	400	F	100	101	FLS flash 	635.35	77550473	2019-09-21	Y	flash	ANY		N		FLASH		22	3092376
+Y	N	N	N		y	Monster Jam	Freedom Hall-KY	9/22/2019	1:00:00 PM	2	400	T	100	101	xfer 	635.35	77550296	2019-09-21	Y	mobile_transfer	ANY		N		MOBILE_TRANSFER		22	3092376
+Y	N	N	N		y	Monster Jam	Infinite Energy Arena	9/13/2019	7:00:00 PM	1	222	T	7945	7945	xfer 	495.00	77437826	2019-06-10	Y	mobile_transfer			N		MOBILE_TRANSFER		22	3090648
+Y	N	N	N		y	Monster Jam	Infinite Energy Arena	9/13/2019	7:00:00 PM	1	222	Q	7945	7945	mobile 	495.00	77437825	2019-06-10	Y	mobile_screencap			N		MOBILE_SCREENCAP		22	3090648
+Y	N	N	N		y	Monster Jam	Infinite Energy Arena	9/13/2019	7:00:00 PM	1	222	H	7945	7945		495.00	77437824	2019-06-10	N	hard			N		HARD		22	3090648
+Y	N	N	N		y	Monster Jam	Infinite Energy Arena	9/13/2019	7:00:00 PM	1	222	F	7945	7945	FLS flash 	495.00	77437823	2019-06-10	Y	flash			N		FLASH		22	3090648
+Y	N	N	N		y	Monster Jam	Infinite Energy Arena	9/13/2019	7:00:00 PM	1	222	E	7945	7945		495.00	77437822	2019-06-10	Y	eticket			N		ELECTRONIC		22	3090648
+Y	N	N	N		y	Monster Jam	Freedom Hall-KY	9/22/2019	1:00:00 PM	2	400	E	102	103		635.35	77436454	2019-09-21	Y	eticket	ANY		N		ELECTRONIC		22	3092376
+Y	N	N	N		y	Monster Jam	Freedom Hall-KY	9/22/2019	1:00:00 PM	2	307	F	102	103	FLS flash 	635.35	77436453	2019-09-21	Y	flash	ANY		N		FLASH		22	3092376
+Y	N	N	N		y	Monster Jam	Freedom Hall-KY	9/22/2019	1:00:00 PM	1	400	M	104	104	mobile 	635.35	77436451	2019-09-21	Y	mobile_screencap	ANY		N		MOBILE_SCREENCAP		22	3092376
+Y	N	N	N		y	Monster Jam	Freedom Hall-KY	9/22/2019	1:00:00 PM	2	307	T	102	103	xfer 	635.35	77436449	2019-09-21	Y	mobile_transfer	ANY		N		MOBILE_TRANSFER		22	3092376
+Y	N	N	N		y	Monster Jam	Freedom Hall-KY	9/22/2019	1:00:00 PM	2	400	H	102	103		635.35	77436448	2019-09-21	N	hard	ANY		N		HARD		22	3092376
+Y	N	N	N		y	Monster Jam	NRG Stadium	10/19/2019	7:00:00 PM	1	UPPER 602	M	92	92	FLS flash 	105.00	77416333	2019-06-10	Y	flash			N		FLASH		22	3116341
+Y	N	N	N		y	Monster Jam	Alamodome	7/6/2019	7:00:00 PM	1	404	98	56	56		10989.00	77105472	2019-06-06	N	hard			N		HARD		22	3092524
+Y	N	N	N		y	Monster Jam	Alamodome	7/6/2019	7:00:00 PM	1	404	98	54	54	card entry 	10989.00	77105470	2019-06-06	N	paperless	CUSTOM	1	N		PAPERLESS_CARD		22	3092524
+Y	N	N	N		y	Monster Jam	Alamodome	7/6/2019	7:00:00 PM	1	404	98	53	53	xfer 	10989.00	77105469	2019-06-06	Y	mobile_transfer			N		MOBILE_TRANSFER		22	3092524
+Y	N	N	N		y	Monster Jam	Alamodome	7/6/2019	7:00:00 PM	1	404	98	52	52	mobile 	10989.00	77105468	2019-06-06	Y	mobile_screencap			N		MOBILE_SCREENCAP		22	3092524
+Y	N	N	N		y	Monster Jam	Alamodome	7/6/2019	7:00:00 PM	1	404	98	51	51		10989.00	77105467	2019-06-06	N	hard			N		HARD		22	3092524
+Y	N	N	N		y	Monster Jam	Alamodome	7/6/2019	7:00:00 PM	1	404	98	50	50	FLS flash 	10989.00	77105466	2019-06-06	Y	flash			N		FLASH		22	3092524
+Y	N	N	N		y	Monster Jam	Alamodome	7/6/2019	7:00:00 PM	1	404	98	49	49		10989.00	77105465	2019-06-06	Y	eticket			N		ELECTRONIC		22	3092524
+Y	N	N	N		y	REZZ	Red Rocks Amphitheatre	9/22/2019	5:00:00 PM	1	GA	GA	3456365	3456365	mobile dadada	869.00	75795371	2019-05-21	Y	mobile_screencap			N	104051184	MOBILE_SCREENCAP		22	3010050
+Y	N	N	N		y	Ozzy Osbourne (Rescheduled from 6/13/2019)	KeyBank Pavilion	6/11/2020	7:30:00 PM	7	LAWN	GA420	962	968	xfer 	55000.00	75627561	2019-05-20	Y	mobile_transfer			N		MOBILE_TRANSFER		22	2899438
+Y	N	N	N		y	Ozzy Osbourne (Rescheduled from 6/13/2019)	KeyBank Pavilion	6/11/2020	7:30:00 PM	2	LAWN	GA69	96	97	xfer 	55000.00	75627536	2019-05-20	Y	mobile_transfer			N		MOBILE_TRANSFER		22	2899438
+Y	N	N	N		y	Ozzy Osbourne (Rescheduled from 6/13/2019)	KeyBank Pavilion	6/11/2020	7:30:00 PM	1	LAWN5	GA20	15	15	xfer 	55000.00	73742025	2019-06-08	Y	mobile_transfer			N		MOBILE_TRANSFER		22	2899438
+Y	Y	Y	N		y	Michael Buble	Scotiabank Arena	7/27/2019	8:00:00 PM	1	308	Q	7	7		55000.00	61464801	2019-01-25	Y	eticket			N		ELECTRONIC		22	2917588
