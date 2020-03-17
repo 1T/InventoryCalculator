@@ -18,24 +18,14 @@ Parameters:
     AllowedValues: [dev, prod]
     ConstraintDescription: must specify prod or dev.
 
+Conditions:
+  UseProdCondition:
+    !Equals [!Ref EnvironmentType, prod]
+
 Resources:
 ##########################################################################################
 # Shared Resources / Roles
 ##########################################################################################
-  CrossAccountLoggingPolicy:
-    Type: AWS::IAM::Policy
-    Properties:
-      PolicyName: "AssumeCrossAccountLoggingRole"
-      PolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: "Allow"
-            Action:
-              - 'sts:AssumeRole'
-            Resource: arn:aws:iam::405028608951:role/us-east-1-LoggingCrossAccount
-      Roles:
-        - !Ref inventorycalculatorBaseRole
-
   inventorycalculatorBaseRole:
     Type: "AWS::IAM::Role"
     Properties:
@@ -54,38 +44,84 @@ Resources:
               Service:
                 - "lambda.amazonaws.com"
       Policies:
+        - PolicyName: "AssumeCrossAccountLoggingRole"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - 'sts:AssumeRole'
+                Resource: arn:aws:iam::405028608951:role/us-east-1-LoggingCrossAccount
         - PolicyName: "inventorycalculatorTables"
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
               - Effect: "Allow"
                 Action:
-                  - dynamodb:GetItem
-                  - dynamodb:PutItem
-                  - dynamodb:UpdateItem
+                  - dynamodb:*
                 Resource:
                   - !GetAtt inventorycalculatorTable.Arn
         - PolicyName: "inventorycalculatorJobs"
-            PolicyDocument:
-              Version: "2012-10-17"
-              Statement:
-                - Effect: "Allow"
-                  Action:
-                    - lambda:InvokeFunction
-                  Resource:
-                    - !GetAtt CrawlJob.Arn
-                    - !GetAtt AsyncWorker.Arn
-                    - !GetAtt StatusCheckFunction.Arn
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - lambda:InvokeFunction
+                Resource:
+                  - !GetAtt AsyncWorker.Arn
         - PolicyName: "inventorycalculatorBuckets"
-            PolicyDocument:
-              Version: "2012-10-17"
-              Statement:
-                - Effect: "Allow"
-                  Action:
-                    - s3:GetObject
-                    - s3:PutObject
-                  Resource:
-                    - !GetAtt inventorycalculatorBucket.Arn
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - s3:*
+                Resource:
+                  - !GetAtt inventorycalculatorBucket.Arn
+  asyncWorkerRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      Path: "/"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "AllowLambdaServiceToAssumeRole"
+            Effect: "Allow"
+            Action:
+              - "sts:AssumeRole"
+            Principal:
+              Service:
+                - "lambda.amazonaws.com"
+      Policies:
+        - PolicyName: "AssumeCrossAccountLoggingRole"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - 'sts:AssumeRole'
+                Resource: arn:aws:iam::405028608951:role/us-east-1-LoggingCrossAccount
+        - PolicyName: "asyncWorkerTables"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - dynamodb:*
+                Resource:
+                  - !GetAtt inventorycalculatorTable.Arn
+        - PolicyName: "asyncWorkerBuckets"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - s3:*
+                Resource:
+                  - !GetAtt inventorycalculatorBucket.Arn
 
 ##########################################################################################
 # API Gateway configuration
@@ -199,7 +235,7 @@ Resources:
   AsyncWorker:
     Type: AWS::Lambda::Function
     Properties:
-      Role: !GetAtt inventorycalculatorBaseRole.Arn
+      Role: !GetAtt asyncWorkerRole.Arn
       Handler: inventorycalculator.handlers.async_worker_handler
       Runtime: python3.7
       Code:
@@ -244,12 +280,6 @@ Resources:
         -
           AttributeName: "job_id"
           AttributeType: "S"
-        -
-          AttributeName: "status"
-          AttributeType: "S"
-        -
-          AttributeName: "total_value"
-          AttributeType: "N"
       ProvisionedThroughput:
         ReadCapacityUnits: !If [UseProdCondition, 15, 5]
         WriteCapacityUnits: !If [UseProdCondition, 15, 5]

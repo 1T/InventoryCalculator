@@ -18,6 +18,13 @@ paths:
         - "application/json"
       produces:
         - "application/json"
+      parameters:
+        - name: UrlBody
+          in: body
+          description: Expected url of tickets
+          required: true
+          schema:
+            $ref: '#/definitions/UrlBody'
       responses:
         200:
           description: "200 response"
@@ -222,3 +229,12 @@ securityDefinitions:
     type: "apiKey"
     name: "x-api-key"
     in: "header"
+definitions:
+  UrlBody:
+    type: object
+    title: "Url Body"
+    required:
+      - url
+    properties:
+      url:
+        type: string

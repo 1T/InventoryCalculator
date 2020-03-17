@@ -19,7 +19,8 @@ async_worker = AwsLambda(ASYNC_WORKER)
 
 def crawl_job_handler(event: Dict[str, Any], _: Any) -> Dict:
     """Creates inventory calculator job for async processing"""
-    file_content = file_loader.by_url(event['body']['url'])
+    print(event)
+    file_content = file_loader.by_url(event['url'])
     job_id = str(uuid4())
     job = {'job_id': job_id}
     storage.upload(job_id, file_content)

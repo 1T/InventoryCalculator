@@ -15,5 +15,6 @@ class S3Storage:
                 Key=key,
                 Bucket=self._bucket_name
             )
-        except ClientError:
+        except ClientError as e:
+            print(e)
             raise S3StorageError('Unable to upload given data')
