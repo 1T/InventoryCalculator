@@ -3,7 +3,7 @@ from inventorycalculator.core.loaders.file_loader import FileLoader
 from inventorycalculator.core.storages.s3_storage import S3Storage
 from inventorycalculator.core.repositories.dynamodb import DynamoDBTable
 from inventorycalculator.core.workers.aws_lambda import AwsLambda
-from inventorycalculator.handlers import create_inventory_calculator_job
+from inventorycalculator.handlers import crawl_job_handler
 from inventorycalculator.settings import STATUSES
 
 
@@ -19,7 +19,7 @@ def test_create_inventory_calculator_job(mock_async_invoke, mock_table_put, mock
         }
     }
 
-    res = create_inventory_calculator_job(event, None)
+    res = crawl_job_handler(event, None)
 
     mock_file_loader.assert_called_with('test_url')
     mock_s3_upload.assert_has_calls([

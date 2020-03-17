@@ -17,7 +17,7 @@ db_table = DynamoDBTable(TABLE_NAME)
 async_worker = AwsLambda(ASYNC_WORKER)
 
 
-def create_inventory_calculator_job(event: Dict[str, Any], _: Any) -> Dict:
+def crawl_job_handler(event: Dict[str, Any], _: Any) -> Dict:
     """Creates inventory calculator job for async processing"""
     file_content = file_loader.by_url(event['body']['url'])
     job_id = str(uuid4())
@@ -32,9 +32,17 @@ def create_inventory_calculator_job(event: Dict[str, Any], _: Any) -> Dict:
     return job
 
 
-# def example_post(event: Dict[str, Any], _: Any) -> Dict:
-#     """Handle example post request."""
-#     # _logger.info(event)
-#     return {
-#         'event': event
-#     }
+def async_worker_handler(event: Dict[str, Any], _: Any) -> Dict:
+    """Process the tickets"""
+    # _logger.info(event)
+    return {
+        'event': event
+    }
+
+
+def status_check_handler(event: Dict[str, Any], _: Any) -> Dict:
+    """Check the status of tickets processing"""
+    # _logger.info(event)
+    return {
+        'event': event
+    }

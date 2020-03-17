@@ -15,14 +15,28 @@ Parameters:
   EnvironmentType:
     Description: Environment type.
     Type: String
-    AllowedValues: [dev]
+    AllowedValues: [dev, prod]
     ConstraintDescription: must specify prod or dev.
 
 Resources:
-  ##########################################################################################
-  # Shared Resources / Roles
-  ##########################################################################################
-  projectbaseBaseRole:
+##########################################################################################
+# Shared Resources / Roles
+##########################################################################################
+  CrossAccountLoggingPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: "AssumeCrossAccountLoggingRole"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - 'sts:AssumeRole'
+            Resource: arn:aws:iam::405028608951:role/us-east-1-LoggingCrossAccount
+      Roles:
+        - !Ref inventorycalculatorBaseRole
+
+  inventorycalculatorBaseRole:
     Type: "AWS::IAM::Role"
     Properties:
       Path: "/"
@@ -40,19 +54,42 @@ Resources:
               Service:
                 - "lambda.amazonaws.com"
       Policies:
-        - PolicyName: "AssumeCrossAccountLoggingRole"
+        - PolicyName: "inventorycalculatorTables"
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
-            - Effect: "Allow"
-              Action:
-              - 'sts:AssumeRole'
-              Resource: arn:aws:iam::405028608951:role/us-east-1-LoggingCrossAccount
+              - Effect: "Allow"
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                Resource:
+                  - !GetAtt inventorycalculatorTable.Arn
+        - PolicyName: "inventorycalculatorJobs"
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: "Allow"
+                  Action:
+                    - lambda:InvokeFunction
+                  Resource:
+                    - !GetAtt CrawlJob.Arn
+                    - !GetAtt AsyncWorker.Arn
+                    - !GetAtt StatusCheckFunction.Arn
+        - PolicyName: "inventorycalculatorBuckets"
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: "Allow"
+                  Action:
+                    - s3:GetObject
+                    - s3:PutObject
+                  Resource:
+                    - !GetAtt inventorycalculatorBucket.Arn
 
-
-  ##########################################################################################
-  # API Gateway configuration
-  ##########################################################################################
+##########################################################################################
+# API Gateway configuration
+##########################################################################################
   Api:
     Type: AWS::ApiGateway::RestApi
     Properties:
@@ -86,13 +123,14 @@ Resources:
       StageName: prod
       Variables:
         ApiRoleName: !Ref ApiRole
-        ExampleGetFunctionName: !Ref ExampleGetFunction
-        ExamplePostFunctionName: !Ref ExamplePostFunction
+        CrawlJobName: !Ref CrawlJob
+        AsyncWorkerName: !Ref AsyncWorker
+        StatusCheckFunctionName: !Ref StatusCheckFunction
 
-  ApiExampleGetFunctionInvokePermission:
+  CrawlJobInvokePermission:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !GetAtt ExampleGetFunction.Arn
+      FunctionName: !GetAtt CrawlJob.Arn
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Join
@@ -105,10 +143,10 @@ Resources:
           - !Ref Api
           - "/*/*"
 
-  ApiExamplePostFunctionInvokePermission:
+  AsyncWorkerInvokePermission:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !GetAtt ExamplePostFunction.Arn
+      FunctionName: !GetAtt AsyncWorker.Arn
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Join
@@ -121,16 +159,31 @@ Resources:
           - !Ref Api
           - "/*/*"
 
+  StatusCheckFunctionInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt StatusCheckFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join
+        - ''
+        - - 'arn:aws:execute-api:'
+          - !Ref AWS::Region
+          - ":"
+          - !Ref AWS::AccountId
+          - ":"
+          - !Ref Api
+          - "/*/*"
 
-  ##########################################################################################
-  # Example Get Function -- Handles the example GET request.
-  ##########################################################################################
-  ExampleGetFunction:
+##########################################################################################
+# Lambda functions
+##########################################################################################
+  CrawlJob:
     Type: AWS::Lambda::Function
     Properties:
-      Role: !GetAtt projectbaseBaseRole.Arn
-      Handler: inventorycalculator.handlers.example_get
-      Runtime: python3.6
+      Role: !GetAtt inventorycalculatorBaseRole.Arn
+      Handler: inventorycalculator.handlers.crawl_job_handler
+      Runtime: python3.7
       Code:
         S3Bucket: !Ref CodeBucketName
         S3Key: !Ref CodeKey
@@ -138,19 +191,17 @@ Resources:
       Timeout: 300
       Environment:
         Variables:
-          APP_NAME: !Ref ServiceName
           ENV_TYPE: !Ref EnvironmentType
+          S3_BUCKET: !Ref inventorycalculatorBucket
+          TABLE_NAME: !Ref inventorycalculatorTable
+          ASYNC_WORKER: !Ref AsyncWorker
 
-
-  ##########################################################################################
-  # Example Post Function -- Handles the example POST request.
-  ##########################################################################################
-  ExamplePostFunction:
+  AsyncWorker:
     Type: AWS::Lambda::Function
     Properties:
-      Role: !GetAtt projectbaseBaseRole.Arn
-      Handler: inventorycalculator.handlers.example_post
-      Runtime: python3.6
+      Role: !GetAtt inventorycalculatorBaseRole.Arn
+      Handler: inventorycalculator.handlers.async_worker_handler
+      Runtime: python3.7
       Code:
         S3Bucket: !Ref CodeBucketName
         S3Key: !Ref CodeKey
@@ -158,15 +209,53 @@ Resources:
       Timeout: 300
       Environment:
         Variables:
-          APP_NAME: !Ref ServiceName
           ENV_TYPE: !Ref EnvironmentType
+          S3_BUCKET: !Ref inventorycalculatorBucket
+          TABLE_NAME: !Ref inventorycalculatorTable
 
-Outputs:
-  APIUrl:
-    Description: API Gateway URL.
-    Value: !Sub
-    - https://${ApiID}.execute-api.${AWS::Region}.amazonaws.com/${ApiStage}/
-    - {
-      ApiID: !Ref Api,
-      ApiStage: !Ref ApiStage
-    }
+  StatusCheckFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Role: !GetAtt inventorycalculatorBaseRole.Arn
+      Handler: inventorycalculator.handlers.status_check_handler
+      Runtime: python3.7
+      Code:
+        S3Bucket: !Ref CodeBucketName
+        S3Key: !Ref CodeKey
+      MemorySize: 128
+      Timeout: 300
+      Environment:
+        Variables:
+          ENV_TYPE: !Ref EnvironmentType
+          S3_BUCKET: !Ref inventorycalculatorBucket
+          TABLE_NAME: !Ref inventorycalculatorTable
+
+#############################################################################
+# Dynamo Tables
+#############################################################################
+  inventorycalculatorTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      KeySchema:
+        -
+          AttributeName: "job_id"
+          KeyType: "HASH"
+      AttributeDefinitions:
+        -
+          AttributeName: "job_id"
+          AttributeType: "S"
+        -
+          AttributeName: "status"
+          AttributeType: "S"
+        -
+          AttributeName: "total_value"
+          AttributeType: "N"
+      ProvisionedThroughput:
+        ReadCapacityUnits: !If [UseProdCondition, 15, 5]
+        WriteCapacityUnits: !If [UseProdCondition, 15, 5]
+
+#############################################################################
+# S3 Buckets
+#############################################################################
+  inventorycalculatorBucket:
+    Type: AWS::S3::Bucket
