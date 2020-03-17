@@ -24,7 +24,7 @@ def test_upload_success_call(mock_client):
 
 
 @patch.object(boto3, 'client')
-def test_async_invoke_failed_call(mock_client):
+def test_upload_failed(mock_client):
     with pytest.raises(S3StorageError):
         s3_client_mock = MagicMock()
         s3_client_mock.put_object = Mock(side_effect=ClientError({}, ''))

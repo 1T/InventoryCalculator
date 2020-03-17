@@ -23,3 +23,7 @@ class InvokeLambdaError(InventoryCalculatorBaseError):
 
 class S3StorageError(InventoryCalculatorBaseError):
     pass
+
+
+class DynamoDBError(InventoryCalculatorBaseError):
+    pass
