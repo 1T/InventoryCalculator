@@ -19,3 +19,7 @@ class InvalidInventoryDataFormatError(InventoryCalculatorBaseError):
 
 class InvokeLambdaError(InventoryCalculatorBaseError):
     pass
+
+
+class S3StorageError(InventoryCalculatorBaseError):
+    pass
