@@ -16,5 +16,13 @@ class S3Storage:
                 Bucket=self._bucket_name
             )
         except ClientError as e:
-            print(e)
             raise S3StorageError('Unable to upload given data')
+
+    def get(self, key: str) -> str:
+        try:
+            return self._client.get_object(
+                Key=key,
+                Bucket=self._bucket_name
+            )['Body'].read().decode('utf-8')
+        except ClientError as e:
+            raise S3StorageError(f'Resource not exists by given key:{key}')

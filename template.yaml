@@ -78,7 +78,7 @@ Resources:
                 Action:
                   - s3:*
                 Resource:
-                  - !GetAtt inventorycalculatorBucket.Arn
+                  - !Join [ "", [!GetAtt inventorycalculatorBucket.Arn, '/*'] ]
   asyncWorkerRole:
     Type: "AWS::IAM::Role"
     Properties:
@@ -121,7 +121,7 @@ Resources:
                 Action:
                   - s3:*
                 Resource:
-                  - !GetAtt inventorycalculatorBucket.Arn
+                  - !Join [ "", [!GetAtt inventorycalculatorBucket.Arn, '/*'] ]
 
 ##########################################################################################
 # API Gateway configuration
