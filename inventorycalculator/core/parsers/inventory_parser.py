@@ -3,6 +3,10 @@ from io import StringIO
 from inventorycalculator.errors import InvalidInventoryDataFormatError
 from inventorycalculator.models.inventory_item import InventoryItem
 from typing import List
+from OneTicketLogging import elasticsearch_logger
+
+
+_logger = elasticsearch_logger(__name__)
 
 
 class InventoryParser:
@@ -19,6 +23,7 @@ class InventoryParser:
                         float(item[cost_index])
                     )
                 )
-        except ValueError:
+        except ValueError as e:
+            _logger.error(e)
             raise InvalidInventoryDataFormatError('Unable to parse the given data')
         return result_items

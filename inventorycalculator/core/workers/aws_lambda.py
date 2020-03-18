@@ -3,6 +3,10 @@ from json import dumps
 from typing import Dict
 from botocore.exceptions import ClientError
 from inventorycalculator.errors import InvokeLambdaError
+from OneTicketLogging import elasticsearch_logger
+
+
+_logger = elasticsearch_logger(__name__)
 
 
 class AwsLambda:
@@ -19,4 +23,5 @@ class AwsLambda:
                 InvocationType=self._invocation_type
             )
         except ClientError as exc:
-            raise InvokeLambdaError(f"{self._name} invocation failed: {exc}")
+            _logger.error(exc)
+            raise InvokeLambdaError(f'{self._name} invocation failed: {exc}')

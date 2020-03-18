@@ -2,6 +2,9 @@ import boto3
 from botocore.exceptions import ClientError
 from inventorycalculator.errors import DynamoDBError
 from typing import Dict
+from OneTicketLogging import elasticsearch_logger
+
+_logger = elasticsearch_logger(__name__)
 
 
 class DynamoDBTable:
@@ -27,7 +30,8 @@ class DynamoDBTable:
                 TableName=self._table_name,
                 Item=prepared_item
             )
-        except ClientError:
+        except ClientError as e:
+            _logger.error(e)
             raise DynamoDBError('Unable to put item')
 
     def _prepare_attr(self, attr_value) -> Dict:
@@ -48,5 +52,6 @@ class DynamoDBTable:
                     'total_value': resp['Item']['total_value']['N']
                 }
             raise DynamoDBError(f'Item not found by given key:{key}')
-        except ClientError:
+        except ClientError as e:
+            _logger.error(e)
             raise DynamoDBError(f'Unable to get item by key:{key}')

@@ -7,12 +7,10 @@ from inventorycalculator.core.storages.s3_storage import S3Storage
 from inventorycalculator.core.workers.aws_lambda import AwsLambda
 from inventorycalculator.errors import S3StorageError, DynamoDBError, AsyncWorkerError, InvalidInventoryDataFormatError
 from inventorycalculator.settings import S3_BUCKET, TABLE_NAME, STATUSES, ASYNC_WORKER
+from OneTicketLogging import elasticsearch_logger
 
-# from OneTicketLogging import elasticsearch_logger
 
-
-# _logger = elasticsearch_logger(__name__)
-
+_logger = elasticsearch_logger(__name__)
 file_loader = FileLoader()
 storage = S3Storage(S3_BUCKET)
 db_table = DynamoDBTable(TABLE_NAME)
@@ -22,6 +20,7 @@ inventory_parser = InventoryParser()
 
 def crawl_job_handler(event: Dict[str, Any], _: Any) -> Dict:
     """Creates inventory calculator job for async processing"""
+    _logger.info(event)
     file_content = file_loader.by_url(event['url'])
     job_id = str(uuid4())
     job = {'job_id': job_id}
@@ -37,7 +36,7 @@ def crawl_job_handler(event: Dict[str, Any], _: Any) -> Dict:
 
 def async_worker_handler(event: Dict[str, Any], _: Any):
     """Process the tickets"""
-    # _logger.info(event)
+    _logger.info(event)
     job_id = event.get('job_id')
     try:
         db_table.get(job_id)
@@ -49,6 +48,7 @@ def async_worker_handler(event: Dict[str, Any], _: Any):
             'total_value': total_value
         })
     except (S3StorageError, DynamoDBError, InvalidInventoryDataFormatError) as e:
+        _logger.error(e)
         db_table.put({
             'job_id': job_id,
             'status': STATUSES.FAILED
@@ -58,7 +58,7 @@ def async_worker_handler(event: Dict[str, Any], _: Any):
 
 def status_check_handler(event: Dict[str, Any], _: Any) -> Dict:
     """Check the status of tickets processing"""
-    # _logger.info(event)
+    _logger.info(event)
     payload = db_table.get(event['job_id'])
     return {
         'status': payload['status'],
