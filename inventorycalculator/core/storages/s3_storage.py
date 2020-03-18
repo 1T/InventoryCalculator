@@ -18,3 +18,6 @@ class S3Storage:
         except ClientError as e:
             print(e)
             raise S3StorageError('Unable to upload given data')
+
+    def get(self, key):
+        pass

@@ -17,3 +17,6 @@ class DynamoDBTable:
             )
         except ClientError:
             raise DynamoDBError('Unable to put item into')
+
+    def get(self, key):
+        pass
