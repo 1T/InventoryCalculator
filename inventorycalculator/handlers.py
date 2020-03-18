@@ -5,6 +5,7 @@ from inventorycalculator.core.parsers.inventory_parser import InventoryParser
 from inventorycalculator.core.repositories.dynamodb import DynamoDBTable
 from inventorycalculator.core.storages.s3_storage import S3Storage
 from inventorycalculator.core.workers.aws_lambda import AwsLambda
+from inventorycalculator.errors import S3StorageError, DynamoDBError, AsyncWorkerError, InvalidInventoryDataFormatError
 from inventorycalculator.settings import S3_BUCKET, TABLE_NAME, STATUSES, ASYNC_WORKER
 
 # from OneTicketLogging import elasticsearch_logger
@@ -34,21 +35,25 @@ def crawl_job_handler(event: Dict[str, Any], _: Any) -> Dict:
     return job
 
 
-def async_worker_handler(event: Dict[str, Any], _: Any) -> Dict:
+def async_worker_handler(event: Dict[str, Any], _: Any):
     """Process the tickets"""
     # _logger.info(event)
-    job_id = event['job_id']
-    db_table.get(job_id)
-    tickets = inventory_parser.from_tsv(storage.get(job_id))
-    total_value = sum([ticket.value for ticket in tickets])
-    db_table.put({
-        'job_id': job_id,
-        'status': STATUSES.SUCCEEDED,
-        'total_value': total_value
-    })
-    return {
-        'job_id': job_id
-    }
+    job_id = event.get('job_id')
+    try:
+        db_table.get(job_id)
+        tickets = inventory_parser.from_tsv(storage.get(job_id))
+        total_value = sum([ticket.value for ticket in tickets])
+        db_table.put({
+            'job_id': job_id,
+            'status': STATUSES.SUCCEEDED,
+            'total_value': total_value
+        })
+    except (S3StorageError, DynamoDBError, InvalidInventoryDataFormatError) as e:
+        db_table.put({
+            'job_id': job_id,
+            'status': STATUSES.FAILED
+        })
+        raise AsyncWorkerError(f'Unable to proceed job with "job_id":{job_id}')
 
 
 def status_check_handler(event: Dict[str, Any], _: Any) -> Dict:

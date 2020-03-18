@@ -24,7 +24,7 @@ def test_put_success_call(mock_client):
         Item={
             'job_id': {'S': '0987654321'},
             'status': {'S': STATUSES.RUNNING},
-            'total_value': {'N': 0}
+            'total_value': {'N': '0'}
         }
     )
     mock_client.assert_called_with('dynamodb')
@@ -63,7 +63,7 @@ def test_get_find_item(mock_client):
                 'S': STATUSES.RUNNING,
             },
             'total_value': {
-                'N': 0,
+                'N': '0',
             },
         }
     }
@@ -78,7 +78,7 @@ def test_get_find_item(mock_client):
     assert {
         'job_id': '0987654321',
         'status': STATUSES.RUNNING,
-        'total_value': 0
+        'total_value': '0'
     } == res
 
 
