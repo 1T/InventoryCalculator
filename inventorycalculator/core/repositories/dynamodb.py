@@ -20,9 +20,8 @@ class DynamoDBTable:
     def put(self, item: Dict):
         try:
             prepared_item = {
-                attr_name: {
-                    self._DATA_TYPES[type(item[attr_name])]: str(item[attr_name])
-                } for attr_name in self._ATTS
+                attr_name: self._prepare_attr(item[attr_name])
+                for attr_name in self._ATTS
             }
             self._client.put_item(
                 TableName=self._table_name,
@@ -30,6 +29,11 @@ class DynamoDBTable:
             )
         except ClientError:
             raise DynamoDBError('Unable to put item')
+
+    def _prepare_attr(self, attr_value) -> Dict:
+        return {
+            self._DATA_TYPES[type(attr_value)]: str(attr_value)
+        }
 
     def get(self, key: str) -> Dict:
         try:

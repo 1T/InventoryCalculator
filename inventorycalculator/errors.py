@@ -21,6 +21,10 @@ class InvokeLambdaError(InventoryCalculatorBaseError):
     pass
 
 
+class AsyncWorkerError(InventoryCalculatorBaseError):
+    pass
+
+
 class S3StorageError(InventoryCalculatorBaseError):
     pass
 
