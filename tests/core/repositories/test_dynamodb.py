@@ -21,7 +21,11 @@ def test_put_success_call(mock_client):
 
     dynamo_client_mock.put_item.assert_called_with(
         TableName=table_name,
-        Item=fake_payload
+        Item={
+            'job_id': {'S': '0987654321'},
+            'status': {'S': STATUSES.RUNNING},
+            'total_value': {'N': 0}
+        }
     )
     mock_client.assert_called_with('dynamodb')
 
