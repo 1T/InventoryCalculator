@@ -11,19 +11,20 @@ x-amazon-apigateway-request-validators:
     validateRequestBody: true
     validateRequestParameters: true
 paths:
-  /v1/example:
-    get:
+  /v1:
+    post:
       x-amazon-apigateway-request-validator: all
       consumes:
-      - "application/json"
-      parameters:
-      - name: exampleparam
-        in: query
-        description: Example Parameter
-        required: true
-        type: string
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
+      parameters:
+        - name: UrlBody
+          in: body
+          description: Expected url of tickets
+          required: true
+          schema:
+            $ref: '#/definitions/UrlBody'
       responses:
         200:
           description: "200 response"
@@ -51,12 +52,115 @@ paths:
             Access-Control-Allow-Origin:
               type: "string"
       security:
-      - api_key: []
+        - api_key: []
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          .*timed out.*:
+            statusCode: "504"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "{\"message\" : \"Request timed out.\"}"
+          Client error.*:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "{\"message\" : $input.json('$.errorMessage')}"
+          Service error.*:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "{\"message\" : $input.json('$.errorMessage')}"
+          Process exited.*:
+            statusCode: "503"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "{\"message\" : $input.json('$.errorMessage')}"
+        uri: arn:aws:apigateway:<<region>>:lambda:path/2015-03-31/functions/arn:aws:lambda:<<region>>:<<accountId>>:function:${stageVariables.CrawlJobName}/invocations
+        passthroughBehavior: "when_no_templates"
+        httpMethod: "POST"
+        type: "aws"
+    options:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/Empty"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'POST,GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+  /v1/jobs/{job_id}:
+    get:
+      x-amazon-apigateway-request-validator: all
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        400:
+          description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        500:
+          description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        503:
+          description: "503 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        504:
+          description: "504 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+      security:
+        - api_key: []
       x-amazon-apigateway-integration:
         requestTemplates:
           application/json: |-
             {
-                "example_param": $input.params('exampleparam')
+              "job_id" : "$input.params('job_id')"
             }
         responses:
           default:
@@ -87,90 +191,15 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "{\"message\" : $input.json('$.errorMessage')}"
-        uri: arn:aws:apigateway:<<region>>:lambda:path/2015-03-31/functions/arn:aws:lambda:<<region>>:<<accountId>>:function:${stageVariables.ExampleGetFunctionName}/invocations
-        passthroughBehavior: "when_no_templates"
-        httpMethod: "POST"
-        type: "aws"
-    post:
-      x-amazon-apigateway-request-validator: all
-      consumes:
-      - "application/json"
-      parameters:
-        - in: body
-          name: examplebody
-          description: Example Body
-          required: true
-          schema:
-            $ref: '#/definitions/ExampleBody'
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "200 response"
-          headers:
-            Access-Control-Allow-Origin:
-              type: "string"
-        400:
-          description: "400 response"
-          headers:
-            Access-Control-Allow-Origin:
-              type: "string"
-        500:
-          description: "500 response"
-          headers:
-            Access-Control-Allow-Origin:
-              type: "string"
-        503:
-          description: "503 response"
-          headers:
-            Access-Control-Allow-Origin:
-              type: "string"
-        504:
-          description: "504 response"
-          headers:
-            Access-Control-Allow-Origin:
-              type: "string"
-      security:
-      - api_key: []
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-          .*timed out.*:
-            statusCode: "504"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-            responseTemplates:
-              application/json: "{\"message\" : \"Request timed out.\"}"
-          Client error.*:
-            statusCode: "400"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-            responseTemplates:
-              application/json: "{\"message\" : $input.json('$.errorMessage')}"
-          Service error.*:
-            statusCode: "500"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-            responseTemplates:
-              application/json: "{\"message\" : $input.json('$.errorMessage')}"
-          Process exited.*:
-            statusCode: "503"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-            responseTemplates:
-              application/json: "{\"message\" : $input.json('$.errorMessage')}"
-        uri: arn:aws:apigateway:<<region>>:lambda:path/2015-03-31/functions/arn:aws:lambda:<<region>>:<<accountId>>:function:${stageVariables.ExamplePostFunctionName}/invocations
+        uri: arn:aws:apigateway:<<region>>:lambda:path/2015-03-31/functions/arn:aws:lambda:<<region>>:<<accountId>>:function:${stageVariables.StatusCheckFunctionName}/invocations
         passthroughBehavior: "when_no_templates"
         httpMethod: "POST"
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -201,13 +230,11 @@ securityDefinitions:
     name: "x-api-key"
     in: "header"
 definitions:
-  ExampleBody:
+  UrlBody:
     type: object
-    title: "Example Body"
+    title: "Url Body"
     required:
-      - example_required_key
+      - url
     properties:
-      example_required_key:
-        type: string
-      example_non_required_key:
+      url:
         type: string
